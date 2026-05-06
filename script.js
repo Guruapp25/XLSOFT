@@ -279,30 +279,3 @@ function scheduleFakeWin() {
 // first one appears quickly
 setTimeout(showFakeWin, 2500);
 scheduleFakeWin();
-
-
-// TikTok / in-app browser autoplay fix for MP4 game previews
-function startGameVideos() {
-  document.querySelectorAll("video").forEach((video) => {
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("webkit-playsinline", "");
-    video.setAttribute("preload", "auto");
-
-    const playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
-    }
-  });
-}
-
-document.addEventListener("DOMContentLoaded", startGameVideos);
-window.addEventListener("load", startGameVideos);
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) startGameVideos();
-});
-document.addEventListener("click", startGameVideos, { once: true });
-document.addEventListener("touchstart", startGameVideos, { once: true });
-
