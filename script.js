@@ -279,3 +279,48 @@ function scheduleFakeWin() {
 // first one appears quickly
 setTimeout(showFakeWin, 2500);
 scheduleFakeWin();
+
+
+// Safe TikTok / in-app browser inline autoplay fix
+function prepareGameVideos() {
+  document.querySelectorAll("video").forEach((video) => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.controls = false;
+
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("x5-playsinline", "");
+    video.setAttribute("preload", "auto");
+    video.setAttribute("disablepictureinpicture", "");
+    video.removeAttribute("controls");
+  });
+}
+
+function tryInlineAutoplay() {
+  document.querySelectorAll("video").forEach((video) => {
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {});
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  prepareGameVideos();
+  tryInlineAutoplay();
+});
+
+window.addEventListener("load", () => {
+  prepareGameVideos();
+  tryInlineAutoplay();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    prepareGameVideos();
+    tryInlineAutoplay();
+  }
+});
